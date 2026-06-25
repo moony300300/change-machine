@@ -149,7 +149,7 @@ class BankApp(App):
             print(f"[Coin Inserter] ERROR: No handler found on {current_screen.name} screen")
     
     def coin_withdrawn(self, amount):
-        self._block_screen_changes()
+        Clock.schedule_once(lambda dt: self._block_screen_changes(), 0)
 
         self.bank_db.adjust_machine_cash('Hoppers', -amount)
         self.handle_change_led()
@@ -161,7 +161,7 @@ class BankApp(App):
             current_screen.coin_withdrawn(amount)
     
     def coin_munched(self, amount):
-        self._block_screen_changes()
+        Clock.schedule_once(lambda dt: self._block_screen_changes(), 0)
 
         self.bank_db.adjust_machine_cash('Hoppers', amount)
         self.handle_change_led()
