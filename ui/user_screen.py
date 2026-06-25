@@ -163,6 +163,7 @@ class UserScreen(Screen):
         self.app.bank_db.update_rfid_card(card['id'], card['value'], 0)
         self.app.bank_db.update_balance(self.user, card["value"], 'Redemption', 'RFID', f'Redeemed £{card["value"]:.2f}')
 
+        self.timeout.restart()
         return self.show_popup(f'Congratulations!\nRedeemed £{card["value"]:.2f}')
 
     def withdraw_coins(self, amount):
@@ -224,6 +225,7 @@ class UserScreen(Screen):
             return  # only act when coins are passing
 
         self.start_munching()
+        self.timeout.restart()
 
     # ─────────────────────────────
     # Hopper error handling

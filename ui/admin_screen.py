@@ -240,9 +240,11 @@ class AdminScreen(Screen):
 
     def coin_withdrawn(self, amount):
         self.update_balance()
+        self.timeout.restart()
 
     def coin_munched(self, amount):
         self.update_balance()
+        self.timeout.restart()
 
     def handle_rfid(self, card):
         self.app.bank_db.update_rfid_card(card['id'], card['value'], 1)
@@ -256,6 +258,8 @@ class AdminScreen(Screen):
         f"{msg}\n" \
         f"ID: {card['id']}\n" \
         f"Value: {card['value']}\n")
+
+        self.timeout.restart()
 
     # ─────────────────────────────
     # Button handlers

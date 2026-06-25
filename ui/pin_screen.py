@@ -165,6 +165,7 @@ class PinScreen(Screen):
         self.timeout.restart()
 
     def handle_rfid(self, card):
+        self.timeout.restart()
         if not card['active']:
             self.show_popup("Prize already redeemed!")
             return
