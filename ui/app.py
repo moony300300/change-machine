@@ -52,6 +52,8 @@ class BankApp(App):
         threading.Thread(target=self.handle_munch_led, daemon=True).start()
         threading.Thread(target=self.handle_dispenser_led, daemon=True).start()
 
+        self.wifi_connected = False
+
         return self.sm
 
     def _init_hardware(self):

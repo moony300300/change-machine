@@ -2,6 +2,7 @@ from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
 from kivy.clock import Clock
 
+import socket
 
 class TimeoutMixin:
     def __init__(self, duration, callback):
@@ -42,3 +43,10 @@ def show_popup(self, message, duration=2.5):
 
     # Auto-dismiss after duration seconds
     Clock.schedule_once(lambda dt: popup.dismiss(), duration)
+
+def check_wifi():
+    try:
+        socket.create_connection(("8.8.8.8", 53), timeout=2)
+        return True
+    except OSError:
+        return False

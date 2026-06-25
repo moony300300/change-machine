@@ -7,7 +7,7 @@ from kivy.uix.button import Button
 from kivy.clock import Clock
 from kivy.app import App
 
-from ui.utils import TimeoutMixin, show_popup
+from ui.utils import TimeoutMixin, show_popup, check_wifi
 
 import types
 
@@ -45,7 +45,22 @@ class AdminScreen(Screen):
             padding=[0, 0, 10, 0],
         )
 
-        top_bar.add_widget(Label())
+        self.wifi_label = Label(
+            text="WiFi",
+            font_name="ui/fonts/PressStart2P-Regular.ttf",
+            font_size=18,
+            color=(0, 1, 0, 1),
+            size_hint=(None, None),
+            size=(120, 60),
+            halign="left",
+            valign="middle",
+        )
+
+        self.wifi_label.bind(
+            size=lambda *x: setattr(self.wifi_label, "text_size", self.wifi_label.size)
+        )
+
+        top_bar.add_widget(self.wifi_label)
 
         logout_btn = Button(
             size_hint=(None, None),
@@ -191,6 +206,9 @@ class AdminScreen(Screen):
         self.app.devices['coin_inserter'].stop()
         self.timeout.start_timeout()
 
+        self._wifi_event = Clock.schedule_interval(self._wifi_check, 2)
+        self.update_wifi_status()  # initial sync
+
         self.app.handle_change_led()
         self.update_balance()
         self._watchdog_event = Clock.schedule_interval(self._ui_watchdog, 0.5)
@@ -198,6 +216,10 @@ class AdminScreen(Screen):
     def on_leave(self):
         self.coin_dispenser.set_error_callback(None)
         self.timeout.cancel_timeout()
+
+        if hasattr(self, "_wifi_event"):
+            self._wifi_event.cancel()
+            del self._wifi_event
 
         if hasattr(self, "_watchdog_event"):
             self._watchdog_event.cancel()
@@ -260,6 +282,26 @@ class AdminScreen(Screen):
         f"Value: {card['value']}\n")
 
         self.timeout.restart()
+
+    def update_wifi_status(self):
+        if getattr(self.app, "wifi_connected", False):
+            self.wifi_label.text = "WiFi"
+            self.wifi_label.color = (0, 1, 0, 1)
+        else:
+            self.wifi_label.text = "No WiFi"
+            self.wifi_label.color = (1, 0, 0, 1)
+
+    def _wifi_check(self, dt):
+        new_state = check_wifi()
+
+        # store previous state on app (create if missing)
+        if not hasattr(self.app, "wifi_connected"):
+            self.app.wifi_connected = None
+
+        # only update if changed
+        if self.app.wifi_connected != new_state:
+            self.app.wifi_connected = new_state
+            self.update_wifi_status()
 
     # ─────────────────────────────
     # Button handlers
