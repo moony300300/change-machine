@@ -2,6 +2,7 @@ from interfaces.gpio_manager import GPIOManager
 import time 
 import threading
 import queue
+from kivy.clock import Clock
 
 class CoinInserter: 
     INACTIVITY_TIMEOUT = 0.5 # seconds
@@ -54,6 +55,6 @@ class CoinInserter:
         while self.running:
             try:
                 value = self.pulse_queue.get(timeout=0.1)
-                self.pulse_callback(value)
+                Clock.schedule_once(lambda dt: self.pulse_callback(value))
             except queue.Empty:
                 continue
