@@ -11,9 +11,6 @@ def import_users_from_csv(file_path, default_balance=2.00):
     Bob,5678
     """
 
-    conn = bank_db.connect()
-    cursor = conn.cursor()
-
     inserted = 0
     skipped = 0
 
@@ -29,20 +26,17 @@ def import_users_from_csv(file_path, default_balance=2.00):
                 skipped += 1
                 continue
 
-            try:
-                cursor.execute("""
-                    INSERT INTO users (name, pin, balance, float, newUser)
-                    VALUES (?, ?, ?, ?, 1)
-                """, (name, pin, default_balance, default_balance))
+            # use your DB method
+            success = bank_db.add_user(
+                name=name.strip(),
+                pin=pin.strip(),
+                balance=default_balance
+            )
 
+            if success:
                 inserted += 1
-
-            except sqlite3.IntegrityError:
-                print(f"[CSV IMPORT] Duplicate PIN skipped: {pin}")
+            else:
                 skipped += 1
-
-    conn.commit()
-    conn.close()
 
     print(f"[CSV IMPORT] Done → Inserted: {inserted}, Skipped: {skipped}")
 
@@ -51,7 +45,7 @@ def import_users_from_csv(file_path, default_balance=2.00):
         "skipped": skipped
     }
 
-if __name__ == "__main__":
-    filepath = "./users.csv"  # Update this path to your CSV file
 
+if __name__ == "__main__":
+    filepath = "./users.csv"
     import_users_from_csv(filepath)
