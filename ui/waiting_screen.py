@@ -71,12 +71,7 @@ class WaitingScreen(Screen):
         """
         Withdraw coins from the shared coin dispenser.
         """
-        dispenser = self.app.devices.get("coin_dispenser")
-        if dispenser:
-            dispenser.withdraw_coins(amount)
-            self.update_screen_message()
-        else:
-            print(f"[{self.name}] ERROR: No coin dispenser found")
+        self.app.withdraw_coins(amount)
 
     def on_hopper_error(self, message):
         Clock.schedule_once(
@@ -105,18 +100,13 @@ class WaitingScreen(Screen):
             self.show_popup("Prize already redeemed!")
             return
         
-        self.app.bank_db.update_rfid_card(card['id'], card['value'], 0)
-        dispenser = self.app.devices.get("coin_dispenser")
-        if dispenser:
-            dispenser.withdraw_coins(card['value'])
-        else:
-            print(f"[{self.name}] ERROR: No coin dispenser found")
-            self.show_popup('Error detected please contact an admin')
-            self.update_screen_message()
-            return
+        passed = self.app.withdraw_coins(card['value'])
+
+        if passed:
+            self.app.bank_db.update_rfid_card(card['id'], card['value'], 0)
+            return Clock.schedule_once(lambda dt: self.show_popup(f'Congratulations!\nRedeemed £{card["value"]:.2f}'))
 
         self.update_screen_message()
-        return Clock.schedule_once(lambda dt: self.show_popup(f'Congratulations!\nRedeemed £{card["value"]:.2f}'))
 
     def update_screen_message(self):
         machineBalance = self.app.bank_db.get_machine_cash('Hoppers')

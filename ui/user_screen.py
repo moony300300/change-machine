@@ -180,7 +180,7 @@ class UserScreen(Screen):
             )
             return
 
-        self.coin_dispenser.withdraw_coins(amount)
+        self.app.withdraw_coins(amount)
 
         self.timeout.restart()
 

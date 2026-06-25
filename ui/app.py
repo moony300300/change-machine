@@ -155,6 +155,21 @@ class BankApp(App):
         if hasattr(current_screen, "coin_munched"):
             current_screen.coin_munched(amount)
     
+    def withdraw_coins(self, amount):
+        dispenser = self.devices.get("coin_dispenser")
+        if dispenser:
+            if self.bank_db.get_machine_cash('Hoppers') >= amount:
+                dispenser.withdraw_coins(amount)
+                return True
+            else:
+                print(f"[BankApp] ERROR: Not enough change")
+                Clock.schedule_once(lambda dt: self.sm.current_screen.show_popup("Error Detected\nNot enough change"))
+                return False
+        else:
+            print(f"[BankApp] ERROR: No coin dispenser found")
+            Clock.schedule_once(lambda dt: self.sm.current_screen.show_popup("Error Detected\nNo Hopper Detected"))
+            return False
+
     def on_rfid_scanned(self, rfid):
         Clock.schedule_once(lambda dt: self._handle_rfid(rfid))
 
