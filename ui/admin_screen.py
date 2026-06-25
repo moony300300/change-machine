@@ -90,7 +90,7 @@ class AdminScreen(Screen):
         )
         self.layout.add_widget(admin_header)
 
-        self.layout.add_widget(BoxLayout(size_hint_y=None, height=30))
+        self.layout.add_widget(BoxLayout(size_hint_y=None, height=15))
 
         # ─────────────────────────────
         # Munch Hopper
@@ -165,7 +165,7 @@ class AdminScreen(Screen):
         bottom_bar = BoxLayout(
             orientation="horizontal",
             size_hint_y=None,
-            height=80,
+            height=45,
             padding=[0, 0, 10, 0],
         )
 
@@ -175,7 +175,7 @@ class AdminScreen(Screen):
             font_size=18,
             color=(0, 1, 0, 1),
             size_hint=(None, None),
-            size=(120, 60),
+            size=(120, 45),
             halign="left",
             valign="middle",
         )
