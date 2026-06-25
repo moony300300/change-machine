@@ -72,6 +72,7 @@ class WaitingScreen(Screen):
         Withdraw coins from the shared coin dispenser.
         """
         self.app.withdraw_coins(amount)
+        
 
     def on_hopper_error(self, message):
         Clock.schedule_once(
@@ -145,3 +146,9 @@ class WaitingScreen(Screen):
         self.update_screen_message()
         self.refresh_leaderboard()
         self.app.handle_change_led()
+
+    def coin_munched(self, amount):
+        self.update_screen_message()
+
+    def coin_withdrawn(self, amount):
+        self.update_screen_message()
