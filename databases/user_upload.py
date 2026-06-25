@@ -30,7 +30,8 @@ def import_users_from_csv(file_path, default_balance=2.00):
             success = bank_db.add_user(
                 name=name.strip(),
                 pin=pin.strip(),
-                balance=default_balance
+                balance=default_balance,
+                newUser=False
             )
 
             if success:

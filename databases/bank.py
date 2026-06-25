@@ -88,13 +88,13 @@ class BankDB:
         conn.commit()
         conn.close()
 
-    def add_user(self, name, pin, balance=0.00):
+    def add_user(self, name, pin, balance=0.00, newUser=True):
         """Add a new user to the database."""
         conn = self.connect()
         cursor = conn.cursor()
         try:
-            cursor.execute("INSERT INTO users (name, pin, balance, float) VALUES (?, ?, ?, ?)", 
-                           (name, pin, balance, balance))
+            cursor.execute("INSERT INTO users (name, pin, balance, float, newUser) VALUES (?, ?, ?, ?, ?)", 
+                           (name, pin, balance, balance, newUser))
             conn.commit()
             return True
         except sqlite3.IntegrityError:
