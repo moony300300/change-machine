@@ -62,6 +62,8 @@ class AdminScreen(Screen):
 
         top_bar.add_widget(self.wifi_label)
 
+        top_bar.add_widget(Label())
+
         logout_btn = Button(
             size_hint=(None, None),
             size=(80, 80),
