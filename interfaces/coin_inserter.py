@@ -6,11 +6,11 @@ import queue
 class CoinInserter: 
     INACTIVITY_TIMEOUT = 0.5 # seconds
 
-    def __init__(self, input_pin_name, output_pin_name pulse_callback, coin_value=0.10): 
+    def __init__(self, input_pin_name, output_pin_name, pulse_callback, coin_value=0.10): 
         """ pulse_callback: function to call when a batch of coins is detected coin_value: value of each coin detected (in £) """ 
         self.input_pin = input_pin_name
         self.output_pin = output_pin_name 
-        self.pulse_callback = pulse_callback 
+        self.pulse_callback = pulse_callback
         self.coin_value = coin_value
 
         self.stop()
