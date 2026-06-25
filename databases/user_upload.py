@@ -1,6 +1,6 @@
 import csv
 
-def import_users_from_csv(self, file_path, default_balance=2.00):
+def import_users_from_csv(file_path, default_balance=2.00):
     """
     CSV format:
     name,pin
