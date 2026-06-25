@@ -144,6 +144,7 @@ def create_app():
 
         <table border=1>
         <tr>
+            <th>ID</th>
             <th>RFID</th>
             <th>Value</th>
             <th>Active</th>
@@ -154,6 +155,7 @@ def create_app():
         {% for c in cards %}
         <tr>
             <form method="post">
+                <td>{{ c['id'] }}</td>
                 <td>{{ c['rfid'] }}</td>
                 <td>
                     <input name="value" value="{{ c['value'] }}"

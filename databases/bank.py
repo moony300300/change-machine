@@ -315,7 +315,7 @@ class BankDB:
             cursor.execute("INSERT INTO rfid_cards (rfid, value) VALUES (?, ?)", 
                            (rfid, value))
             conn.commit()
-            return True
+            return self.get_rfid_card_by_rfid(rfid)
         except sqlite3.IntegrityError:
             print("Error: RFID tag already registered.")
             return False
