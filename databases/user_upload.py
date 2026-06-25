@@ -1,4 +1,7 @@
 import csv
+from databases.bank import BankDB
+
+bank_db = BankDB()
 
 def import_users_from_csv(file_path, default_balance=2.00):
     """
@@ -8,7 +11,7 @@ def import_users_from_csv(file_path, default_balance=2.00):
     Bob,5678
     """
 
-    conn = self.connect()
+    conn = bank_db.connect()
     cursor = conn.cursor()
 
     inserted = 0
