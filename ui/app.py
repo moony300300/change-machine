@@ -113,21 +113,21 @@ class BankApp(App):
             self.user_screen.update_user(user)
             self.app.sm.current = "user"
         else:
-            Clock.schedule_once(lambda dt: self.show_popup("Please wait before changing screens"))
+            Clock.schedule_once(lambda dt: self.sm.current_screen.show_popup("Please wait before changing screens"))
 
     def show_waiting_screen(self, dt=None):
         self.current_user = None
         if self.canChangeScreen:
             self.sm.current = "waiting"
         else:
-            Clock.schedule_once(lambda dt: self.show_popup("Please wait before changing screens"))
+            Clock.schedule_once(lambda dt: self.sm.current_screen.show_popup("Please wait before changing screens"))
 
     def show_admin_screen(self, dt=None):
         self.current_user = None
         if self.canChangeScreen:
             self.sm.current = "admin"
         else:
-            Clock.schedule_once(lambda dt: self.show_popup("Please wait before changing screens"))
+            Clock.schedule_once(lambda dt: self.sm.current_screen.show_popup("Please wait before changing screens"))
 
     def _handle_hopper_error(self, message):
         screen = self.sm.current_screen
