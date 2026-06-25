@@ -68,7 +68,8 @@ class BankApp(App):
 
         # Coin Inserter
         self.devices["coin_inserter"] = CoinInserter(
-            pin_name="INSERTER_SENSOR",
+            input_pin_name="COIN_INSERTER_POWER",
+            output_pin_name="INSERTER_SENSOR",
             pulse_callback=self.handle_coin_insert,
             coin_value=0.10
         )
