@@ -207,7 +207,7 @@ class AdminScreen(Screen):
         if not low_state:
             return  # only act when coins are passing
         
-        Clock.schedule_once(lambda dt: self.show_popup("Use button to munch coins"))
+        self.run_muncher()
         self.timeout.restart()
 
     def on_hopper_error(self, message):
