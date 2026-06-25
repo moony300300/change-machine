@@ -101,6 +101,8 @@ python3 main.py
 - Kivy UI runs fullscreen on the Pi display.
 - Flask admin server listens on `0.0.0.0:5000`.
 
+> ⚠️ **Security note:** The web admin interface is intended for use on a trusted **local network only**. Do **not** expose this service directly to the public internet or any public IP without additional protections (authentication, firewall rules, and a secure reverse proxy).
+
 Open from another device on the same network:
 
 ```text
@@ -168,4 +170,4 @@ python3 -c "from web_admin import create_app; create_app().run(host='0.0.0.0', p
 
 ## License
 
-No license file is currently included. Add one if you plan to distribute this project.
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
