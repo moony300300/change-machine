@@ -319,6 +319,7 @@ class BankDB:
             conn.commit()
 
             card_id = cursor.lastrowid
+            print("[DB DEBUG] lastrowid =", card_id)
             return {
                 "id": card_id,
                 "rfid": rfid,
