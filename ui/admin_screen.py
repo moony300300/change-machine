@@ -6,7 +6,9 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.clock import Clock
 from kivy.app import App
+from kivy.uix.popup import Popup
 
+import subprocess
 from ui.utils import TimeoutMixin, show_popup, check_wifi
 
 import types
@@ -45,22 +47,20 @@ class AdminScreen(Screen):
             padding=[0, 0, 10, 0],
         )
 
-        self.wifi_label = Label(
-            text="WiFi",
+        shutdown_btn = Button(
+            text="SHUTDOWN",
             font_name="ui/fonts/PressStart2P-Regular.ttf",
-            font_size=18,
-            color=(0, 1, 0, 1),
-            size_hint=(None, None),
-            size=(120, 60),
-            halign="left",
-            valign="middle",
+            font_size=20,
+            background_normal="",
+            background_color=(0.6, 0, 0, 1),
+            color=(1, 1, 1, 1),
+            size_hint_y=None,
+            height=60,
         )
 
-        self.wifi_label.bind(
-            size=lambda *x: setattr(self.wifi_label, "text_size", self.wifi_label.size)
-        )
+        shutdown_btn.bind(on_press=lambda x: self.confirm_shutdown())
 
-        top_bar.add_widget(self.wifi_label)
+        top_bar.add_widget(shutdown_btn)
 
         top_bar.add_widget(Label())
 
@@ -162,6 +162,31 @@ class AdminScreen(Screen):
             self._make_row("Machine Balance:", self.machine_balance_label, height=70)
         )
 
+        bottom_bar = BoxLayout(
+            orientation="horizontal",
+            size_hint_y=None,
+            height=80,
+            padding=[0, 0, 10, 0],
+        )
+
+        self.wifi_label = Label(
+            text="WiFi",
+            font_name="ui/fonts/PressStart2P-Regular.ttf",
+            font_size=18,
+            color=(0, 1, 0, 1),
+            size_hint=(None, None),
+            size=(120, 60),
+            halign="left",
+            valign="middle",
+        )
+
+        self.wifi_label.bind(
+            size=lambda *x: setattr(self.wifi_label, "text_size", self.wifi_label.size)
+        )
+
+        bottom_bar.add_widget(self.wifi_label)
+        
+        self.layout.add_widget(bottom_bar)
 
         self.add_widget(self.layout)
 
@@ -365,3 +390,40 @@ class AdminScreen(Screen):
             self.dispenser_running = self.coin_dispenser.motor_on
 
         self._update_hopper_buttons()
+
+    def confirm_shutdown(self):
+           layout = BoxLayout(
+               orientation="vertical",
+               padding=20,
+               spacing=20
+           )
+
+           layout.add_widget(Label(
+               text="Shutdown Raspberry Pi?",
+               font_name="ui/fonts/PressStart2P-Regular.ttf",
+           ))
+
+           buttons = BoxLayout(spacing=10)
+
+           cancel_btn = Button(text="Cancel")
+           shutdown_btn = Button(text="Shutdown")
+
+           buttons.add_widget(cancel_btn)
+           buttons.add_widget(shutdown_btn)
+
+           layout.add_widget(buttons)
+
+           popup = Popup(
+               title="Confirm Shutdown",
+               content=layout,
+               size_hint=(0.7, 0.4),
+               auto_dismiss=False
+           )
+
+           cancel_btn.bind(on_press=popup.dismiss)
+
+           shutdown_btn.bind(
+               on_press=lambda x: self.safe_shutdown(popup)
+           )
+
+           popup.open()
