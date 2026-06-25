@@ -86,16 +86,6 @@ class CoinHopper:
             except queue.Empty:
                 continue
 
-            # --- Safety checks ---
-            if not self.get_low_level_state():
-                self._error("Hopper empty")
-                continue
-
-            app = App.get_running_app()
-            if app.bank_db.get_machine_cash("Hoppers") < 1.0:
-                self._error("Machine hopper balance low")
-                continue
-
             # --- Begin withdrawal ---
             self.target_amount = amount
             print(f"[Coin Hopper] Starting worker withdrawing £{amount}")
