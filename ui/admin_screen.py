@@ -427,3 +427,13 @@ class AdminScreen(Screen):
            )
 
            popup.open()
+
+    def safe_shutdown(self, popup=None):
+        if popup:
+            popup.dismiss()
+
+        print("[ADMIN] Shutdown requested")
+
+        subprocess.Popen(
+            ["sudo", "shutdown", "-h", "now"]
+        )
