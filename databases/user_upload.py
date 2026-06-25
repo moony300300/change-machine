@@ -14,7 +14,7 @@ def import_users_from_csv(file_path, default_balance=2.00):
     inserted = 0
     skipped = 0
 
-    with open(file_path, newline='') as csvfile:
+    with open(file_path, newline='', encoding='utf-16') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
