@@ -111,7 +111,7 @@ class BankApp(App):
         if self.canChangeScreen:
             self.current_user = user
             self.user_screen.update_user(user)
-            self.app.sm.current = "user"
+            self.sm.current = "user"
         else:
             Clock.schedule_once(lambda dt: self.sm.current_screen.show_popup("Please wait before changing screens"))
 
