@@ -392,7 +392,7 @@ class BankDB:
         c.execute("""
             SELECT id, rfid, value, active, isAdminKey
             FROM rfid_cards
-            ORDER BY id DESC
+            ORDER BY id ASC
         """)
         rows = c.fetchall()
         conn.close()
