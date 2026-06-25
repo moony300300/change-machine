@@ -17,6 +17,7 @@ class WaitingScreen(Screen):
         self.show_popup = types.MethodType(show_popup, self)
 
         self.root = BoxLayout(orientation="vertical", padding=20, spacing=20)
+        self.add_widget(self.root)
 
         self.leaderboard_box = BoxLayout(
             orientation="vertical",
@@ -42,7 +43,6 @@ class WaitingScreen(Screen):
         self.root.add_widget(self.title)
         self.root.add_widget(self.leaderboard_box)
         self.root.add_widget(self.login_button)
-        self.add_widget(self.root)
 
     def refresh_leaderboard(self):
         self.leaderboard_box.clear_widgets()
