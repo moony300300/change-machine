@@ -131,7 +131,7 @@ class WaitingScreen(Screen):
             self.app.devices['coin_inserter'].stop()
         elif machineBalance > 0.0:
             self.screenMessage = "Very Low Change"
-            self.screenMessageColour = (1, 0, 1, 0)
+            self.screenMessageColour = (1, 0, 0, 1)
             self.app.devices['coin_inserter'].stop()
         else:
             self.screenMessage = "No Change"
