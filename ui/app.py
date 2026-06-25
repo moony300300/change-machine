@@ -198,8 +198,10 @@ class BankApp(App):
     def handle_change_led(self):
         change_led = self.devices['change_led']
 
-        if self.bank_db.get_machine_cash('Hoppers') > 1:
+        if self.bank_db.get_machine_cash('Hoppers') > 2:
             change_led.on()
+        elif self.bank_db.get_machine_cash('Hoppers') > 1:
+            change_led.flash(2)
         elif self.bank_db.get_machine_cash('Hoppers') > 0:
             change_led.flash(1)
         else:
