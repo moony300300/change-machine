@@ -65,7 +65,10 @@ class WaitingScreen(Screen):
             )
 
     def go_to_pin(self, instance):
-        self.app.sm.current = "pin"
+        if self.app.canChangeScreen:
+            self.app.sm.current = "pin"
+        else:
+            Clock.schedule_once(lambda dt: self.show_popup("Please wait before changing screens"))
 
     def withdraw_coins(self, amount):
         """

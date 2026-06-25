@@ -37,6 +37,9 @@ class BankApp(App):
         self.pin_screen = PinScreen(name="pin")
         self.admin_screen = AdminScreen(name="admin")
 
+        self.canChangeScreen = True
+        self._screen_change_timer = None
+
         self.waiting_screen.app = self
         self.user_screen.app = self
         self.pin_screen.app = self
@@ -105,17 +108,26 @@ class BankApp(App):
         )
 
     def login_user(self, user):
-        self.current_user = user
-        self.user_screen.update_user(user)
-        self.sm.current = "user"
+        if self.canChangeScreen:
+            self.current_user = user
+            self.user_screen.update_user(user)
+            self.app.sm.current = "user"
+        else:
+            Clock.schedule_once(lambda dt: self.show_popup("Please wait before changing screens"))
 
     def show_waiting_screen(self, dt=None):
         self.current_user = None
-        self.sm.current = "waiting"
+        if self.canChangeScreen:
+            self.sm.current = "waiting"
+        else:
+            Clock.schedule_once(lambda dt: self.show_popup("Please wait before changing screens"))
 
     def show_admin_screen(self, dt=None):
         self.current_user = None
-        self.sm.current = "admin"
+        if self.canChangeScreen:
+            self.sm.current = "admin"
+        else:
+            Clock.schedule_once(lambda dt: self.show_popup("Please wait before changing screens"))
 
     def _handle_hopper_error(self, message):
         screen = self.sm.current_screen
@@ -137,6 +149,8 @@ class BankApp(App):
             print(f"[Coin Inserter] ERROR: No handler found on {current_screen.name} screen")
     
     def coin_withdrawn(self, amount):
+        self._block_screen_changes()
+
         self.bank_db.adjust_machine_cash('Hoppers', -amount)
         self.handle_change_led()
         current_screen = self.sm.current_screen
@@ -147,6 +161,8 @@ class BankApp(App):
             current_screen.coin_withdrawn(amount)
     
     def coin_munched(self, amount):
+        self._block_screen_changes()
+
         self.bank_db.adjust_machine_cash('Hoppers', amount)
         self.handle_change_led()
         current_screen = self.sm.current_screen
@@ -248,3 +264,20 @@ class BankApp(App):
                 dispenser_led.off()
 
             time.sleep(0.25)
+
+    def _block_screen_changes(self):
+        self.canChangeScreen = False
+
+        # Cancel any existing countdown
+        if self._screen_change_timer:
+            self._screen_change_timer.cancel()
+
+        # Start a fresh 1-second countdown
+        self._screen_change_timer = Clock.schedule_once(
+            self._enable_screen_changes,
+            1.0
+        )
+
+    def _enable_screen_changes(self, dt):
+        self.canChangeScreen = True
+        self._screen_change_timer = None
