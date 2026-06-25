@@ -244,6 +244,7 @@ class UserScreen(Screen):
         self.coin_dispenser.set_error_callback(self.on_hopper_error)
         self.coin_muncher.set_error_callback(self.on_hopper_error)
         self.app.devices['coin_muncher'].set_low_level_callback(self._on_muncher_coin_detected)
+        self.app.devices['coin_inserter'].start()
         self.timeout.start_timeout()
 
         if self.coin_muncher.last_low_state:

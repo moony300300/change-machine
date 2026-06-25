@@ -124,15 +124,19 @@ class WaitingScreen(Screen):
         if machineBalance > 2.0:
             self.screenMessage = "Leaderboard"
             self.screenMessageColour = (0, 1, 0, 1)
+            self.app.devices['coin_inserter'].start()
         elif machineBalance > 1.0:
             self.screenMessage = "Low Change"
             self.screenMessageColour = (1.0, 0.75, 0.2, 1)
+            self.app.devices['coin_inserter'].stop()
         elif machineBalance > 0.0:
             self.screenMessage = "Very Low Change"
             self.screenMessageColour = (1, 0, 1, 0)
+            self.app.devices['coin_inserter'].stop()
         else:
             self.screenMessage = "No Change"
             self.screenMessageColour = (1, 0, 0, 1)
+            self.app.devices['coin_inserter'].stop()
 
         self.title = Label(
             text=self.screenMessage,

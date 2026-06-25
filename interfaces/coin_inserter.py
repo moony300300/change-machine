@@ -11,9 +11,9 @@ class CoinInserter:
         self.input_pin = input_pin_name
         self.output_pin = output_pin_name 
         self.pulse_callback = pulse_callback 
-        self.coin_value = coin_value 
+        self.coin_value = coin_value
 
-        self.start()
+        self.stop()
 
         self.last_state = GPIOManager.read(self.input_pin) 
 

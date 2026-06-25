@@ -188,6 +188,7 @@ class AdminScreen(Screen):
         self.coin_dispenser.set_error_callback(self.on_hopper_error)
         self.coin_muncher.set_error_callback(self.on_hopper_error)
         self.app.devices['coin_muncher'].set_low_level_callback(self._on_muncher_coin_detected)
+        self.app.devices['coin_inserter'].stop()
         self.timeout.start_timeout()
 
         self.app.handle_change_led()
