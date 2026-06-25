@@ -165,6 +165,7 @@ class BankApp(App):
             bank_db.add_rfid_card(rfid, 0)
             if hasattr(current_screen, "show_popup"):
                 current_screen.show_popup("New RFID card registered")
+                return
 
         # ─── ADMIN OVERRIDE ─────────────────────
         if card['is_admin']:
