@@ -38,7 +38,7 @@ class WaitingScreen(Screen):
         self.update_screen_message()
 
     def create_UI(self):
-        self.root.clear_widget()
+        self.root.clear_widgets()
         self.root.add_widget(self.title)
         self.root.add_widget(self.leaderboard_box)
         self.root.add_widget(self.login_button)
