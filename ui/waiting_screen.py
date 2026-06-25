@@ -116,7 +116,7 @@ class WaitingScreen(Screen):
             return
 
         self.update_screen_message()
-        return self.show_popup(f'Congratulations!\nRedeemed £{card["value"]:.2f}')
+        return Clock.schedule_once(lambda dt: self.show_popup(f'Congratulations!\nRedeemed £{card["value"]:.2f}'))
 
     def update_screen_message(self):
         machineBalance = self.app.bank_db.get_machine_cash('Hoppers')
