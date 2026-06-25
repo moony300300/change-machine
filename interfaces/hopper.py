@@ -5,7 +5,7 @@ import threading
 import queue
 
 class CoinHopper:
-    TIMEOUT_SECONDS = 5
+    TIMEOUT_SECONDS = 7
     BATCH_TIMEOUT = 0.5  # seconds without pulses = batch complete
 
     def __init__(self, motor_pin, coin_sensor_pin, low_level_pin,
