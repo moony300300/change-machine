@@ -178,6 +178,26 @@ class BankDB:
         conn.commit()
         conn.close()
 
+    def update_user_score(self, user_id, score):
+        conn = self.connect()
+        c = conn.cursor()
+
+        c.execute(
+            "SELECT balance FROM users WHERE id = ?",
+            (user_id,)
+        )
+        balance = c.fetchone()["balance"]
+
+        new_float = balance - (score / 100.0)
+
+        c.execute(
+            "UPDATE users SET float = ? WHERE id = ?",
+            (new_float, user_id)
+        )
+
+        conn.commit()
+        conn.close()
+
     def get_transactions(self, user_id=None, start=None, end=None):
         conn = self.connect()
         cur = conn.cursor()

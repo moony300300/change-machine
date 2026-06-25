@@ -36,21 +36,9 @@ def create_app():
 
             elif "set_score" in request.form:
                 user_id = int(request.form["user_id"])
-
-                user = bank_db.get_user_by_id(user_id)
-
                 score = float(request.form["score"])
 
-                new_float = user["balance"] - (score / 100.0)
-
-                conn = bank_db.connect()
-                c = conn.cursor()
-                c.execute(
-                    "UPDATE users SET float = ? WHERE id = ?",
-                    (new_float, user_id)
-                )
-                conn.commit()
-                conn.close()
+                bank_db.update_user_score(user_id, score)
 
             return redirect("/users")
 
@@ -73,8 +61,6 @@ def create_app():
             <td>{{ u['name'] }}</td>
             <td>{{ u['pin'] }}</td>
             <td>£{{ '%.2f'|format(u['balance']) }}</td>
-            <td>£{{ '%.2f'|format(u['balance']) }}</td>
-
             <td>
                 <form method="post">
                     <input type="hidden" name="user_id" value="{{ u['id'] }}">
@@ -84,7 +70,7 @@ def create_app():
                         value="{{ ((u['balance'] - u['float']) * 100)|int }}"
                         size="6">
             
-                    <button name="save_user">Save</button>
+                    <button name="set_score">Set</button>
                 </form>
             </td>
             <td>
