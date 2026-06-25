@@ -19,9 +19,6 @@ class CoinInserter:
 
         self.pulse_queue = queue.Queue()
 
-        threading.Thread(target=self._run, daemon=True).start() 
-        threading.Thread(target=self._pulse_worker, daemon=True).start()
-
     def stop(self): 
         GPIOManager.off(self.output_pin)
         self.running = False
@@ -29,6 +26,14 @@ class CoinInserter:
     def start(self):
         GPIOManager.on(self.output_pin)
         self.running = True
+
+        if not hasattr(self, 'run_thread') or not self.run_thread.is_alive():
+            self.run_thread = threading.Thread(target=self._run, daemon=True)
+            self.run_thread.start()
+
+        if not hasattr(self, 'pulse_thread') or not self.pulse_thread.is_alive():
+            self.pulse_thread = threading.Thread(target=self._pulse_worker, daemon=True)
+            self.pulse_thread.start()
 
     # ───────────────────────────── 
     # Pulse detection 
