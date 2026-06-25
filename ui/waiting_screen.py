@@ -81,6 +81,7 @@ class WaitingScreen(Screen):
         dispenser = self.app.devices.get("coin_dispenser")
         if dispenser:
             dispenser.withdraw_coins(amount)
+            self.update_screen_message()
         else:
             print(f"[{self.name}] ERROR: No coin dispenser found")
 
@@ -88,6 +89,7 @@ class WaitingScreen(Screen):
         Clock.schedule_once(
             lambda dt: self.show_popup(f"Hopper Error:\n{message}")
         )
+        self.update_screen_message()
         print(f"[Coin Hopper] ERROR: {message}")
 
     def _on_muncher_coin_detected(self, low_state):
@@ -99,6 +101,8 @@ class WaitingScreen(Screen):
         if not current_user:
             # No user, show popup
             Clock.schedule_once(lambda dt: self.show_popup("Please log in to deposit coins"))
+
+        self.update_screen_message()
 
     def handle_coin_insert(self, amount):
         self.withdraw_coins(amount)
@@ -115,8 +119,10 @@ class WaitingScreen(Screen):
         else:
             print(f"[{self.name}] ERROR: No coin dispenser found")
             self.show_popup('Error detected please contact an admin')
+            self.update_screen_message()
             return
 
+        self.update_screen_message()
         return self.show_popup(f'Congratulations!\nRedeemed £{card["value"]:.2f}')
 
     def update_screen_message(self):
@@ -141,5 +147,6 @@ class WaitingScreen(Screen):
         self.app.devices["coin_dispenser"].set_error_callback(self.on_hopper_error)
         self.app.devices['coin_muncher'].set_error_callback(self.on_hopper_error)
         self.app.devices['coin_muncher'].set_low_level_callback(self._on_muncher_coin_detected)
+        self.update_screen_message()
         self.refresh_leaderboard()
         self.app.handle_change_led()
