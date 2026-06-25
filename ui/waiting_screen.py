@@ -1,3 +1,4 @@
+from re import M
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -15,13 +16,16 @@ class WaitingScreen(Screen):
         self.app = App.get_running_app()
         self.show_popup = types.MethodType(show_popup, self)
 
+        self.screenMessage = "Leaderboard"
+        self.screenMessageColour = (0, 1, 0, 1)
+
         root = BoxLayout(orientation="vertical", padding=20, spacing=20)
 
         title = Label(
-            text="🏆 Leaderboard 🏆",
+            text=self.screenMessage,
             font_name="ui/fonts/PressStart2P-Regular.ttf",
             font_size=32,
-            color=[0, 1, 0, 1],
+            color=self.screenMessageColour,
             size_hint_y=0.2,
         )
         root.add_widget(title)
@@ -114,6 +118,24 @@ class WaitingScreen(Screen):
             return
 
         return self.show_popup(f'Congratulations!\nRedeemed £{card["value"]:.2f}')
+
+    def update_screen_message(self):
+        machineBalance = self.app.bank_db.get_machine_cash('Hoppers')
+        
+        if machineBalance > 2.0:
+            self.screenMessage = "Leaderboard"
+            self.screenMessageColour = (0, 1, 0, 1)
+        elif machineBalance > 1.0:
+            self.screenMessage = "Low Change"
+            self.screenMessageColour = (1.0, 0.75, 0.2, 1)
+        elif machineBalance > 0.0:
+            self.screenMessage = "Very Low Change"
+            self.screenMessageColour = (1, 0, 1, 0)
+        else:
+            self.screenMessage = "No Change"
+            self.screenMessageColour = (1, 0, 0, 1)
+        self.clear_widgets()
+        self.__init__()
 
     def on_enter(self):
         self.app.devices["coin_dispenser"].set_error_callback(self.on_hopper_error)
