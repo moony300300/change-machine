@@ -16,26 +16,13 @@ class WaitingScreen(Screen):
         self.app = App.get_running_app()
         self.show_popup = types.MethodType(show_popup, self)
 
-        self.screenMessage = "Leaderboard"
-        self.screenMessageColour = (0, 1, 0, 1)
-
-        root = BoxLayout(orientation="vertical", padding=20, spacing=20)
-
-        title = Label(
-            text=self.screenMessage,
-            font_name="ui/fonts/PressStart2P-Regular.ttf",
-            font_size=32,
-            color=self.screenMessageColour,
-            size_hint_y=0.2,
-        )
-        root.add_widget(title)
+        self.root = BoxLayout(orientation="vertical", padding=20, spacing=20)
 
         self.leaderboard_box = BoxLayout(
             orientation="vertical",
             spacing=10,
             size_hint_y=0.6,
         )
-        root.add_widget(self.leaderboard_box)
 
         self.login_button = Button(
             text="LOGIN",
@@ -48,8 +35,14 @@ class WaitingScreen(Screen):
         )
         self.login_button.bind(on_press=self.go_to_pin)
 
-        root.add_widget(self.login_button)
-        self.add_widget(root)
+        self.update_screen_message()
+
+    def create_UI(self):
+        self.root.clear_widget()
+        self.root.add_widget(self.title)
+        self.root.add_widget(self.leaderboard_box)
+        self.root.add_widget(self.login_button)
+        self.add_widget(self.root)
 
     def refresh_leaderboard(self):
         self.leaderboard_box.clear_widgets()
@@ -140,8 +133,16 @@ class WaitingScreen(Screen):
         else:
             self.screenMessage = "No Change"
             self.screenMessageColour = (1, 0, 0, 1)
-        self.clear_widgets()
-        self.__init__()
+
+        self.title = Label(
+            text=self.screenMessage,
+            font_name="ui/fonts/PressStart2P-Regular.ttf",
+            font_size=32,
+            color=self.screenMessageColour,
+            size_hint_y=0.2,
+        )
+
+        self.create_UI()
 
     def on_enter(self):
         self.app.devices["coin_dispenser"].set_error_callback(self.on_hopper_error)
