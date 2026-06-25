@@ -32,7 +32,25 @@ def create_app():
 
             elif "delete_user" in request.form:
                 user_id = int(request.form["user_id"])
-                bank_db.delete_user(user_id)  # <-- You’ll need to add this in BankDB
+                bank_db.delete_user(user_id)
+
+            elif "set_score" in request.form:
+                user_id = int(request.form["user_id"])
+
+                user = bank_db.get_user_by_id(user_id)
+
+                score = float(request.form["score"])
+
+                new_float = user["balance"] - (score / 100.0)
+
+                conn = bank_db.connect()
+                c = conn.cursor()
+                c.execute(
+                    "UPDATE users SET float = ? WHERE id = ?",
+                    (new_float, user_id)
+                )
+                conn.commit()
+                conn.close()
 
             return redirect("/users")
 
@@ -49,12 +67,26 @@ def create_app():
 
         <h2>Existing Users</h2>
         <table border=1>
-        <tr><th>Name</th><th>PIN</th><th>Balance</th><th>Add Balance</th><th>Delete</th></tr>
+        <tr><th>Name</th><th>PIN</th><th>Balance</th><th>Score</th><th>Add Balance</th><th>Delete</th></tr>
         {% for u in users %}
         <tr>
             <td>{{ u['name'] }}</td>
             <td>{{ u['pin'] }}</td>
             <td>£{{ '%.2f'|format(u['balance']) }}</td>
+            <td>£{{ '%.2f'|format(u['balance']) }}</td>
+
+            <td>
+                <form method="post">
+                    <input type="hidden" name="user_id" value="{{ u['id'] }}">
+            
+                    <input
+                        name="score"
+                        value="{{ ((u['balance'] - u['float']) * 100)|int }}"
+                        size="6">
+            
+                    <button name="save_user">Save</button>
+                </form>
+            </td>
             <td>
                 <form method="post">
                     <input type="hidden" name="user_id" value="{{ u['id'] }}">
