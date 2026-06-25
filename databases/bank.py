@@ -139,11 +139,6 @@ class BankDB:
 
         self.log_transaction(user, amount, type, source, reference)
 
-        if source == 'Hopper':
-            self.adjust_machine_cash('Hoppers', amount)
-        elif source == 'Coin Inserter':
-            self.adjust_machine_cash('Coin_Inserter', amount)
-
         return new_balance
 
     def get_user_balance(self, user):

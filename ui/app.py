@@ -126,6 +126,7 @@ class BankApp(App):
 
     def handle_coin_insert(self, amount):
         current_screen = self.sm.current_screen
+        self.bank_db.adjust_machine_cash('Coin_Inserter', amount)
         print(f"[Coin Inserter] Coin inserted on {current_screen.name} screen")
         
         if hasattr(current_screen, "handle_coin_insert"):
