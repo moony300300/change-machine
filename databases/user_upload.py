@@ -1,5 +1,5 @@
 import csv
-from databases.bank import BankDB
+from bank import BankDB
 
 bank_db = BankDB()
 
